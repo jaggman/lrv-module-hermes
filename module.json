@@ -1,0 +1,16 @@
+{
+    "name": "Hermes",
+    "alias": "hermes",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Hermes\\Providers\\HermesServiceProvider"
+    ],
+    "aliases":{
+	},
+    "files": [
+        "start.php"
+    ]
+}
