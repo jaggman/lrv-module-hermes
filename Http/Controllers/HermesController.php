@@ -4,6 +4,7 @@ use Pingpong\Modules\Routing\Controller;
 use Modules\Hermes\Models\Point;
 use Modules\Hermes\Models\Entityt;
 use Modules\Hermes\Models\Entity;
+use Carbon\Carbon;
 
 class HermesController extends Controller {
 	
@@ -80,11 +81,17 @@ class HermesController extends Controller {
         }
         public function getIndex()
 	{
-            return view('hermes::index', ['state'=>$this->data()]);
+            return view('hermes::index', [
+                'state'=>$this->data(),
+                'point'=>Point::all(),
+            ]);
 	}
         public function postIndex()
         {
-            return view('hermes::indexPost', ['state'=>$this->data()]);
+            return view('hermes::indexPost', [
+                'state'=>$this->data(),
+                'point'=>Point::all(),
+            ]);
         }
         
 	/*
@@ -124,9 +131,12 @@ class HermesController extends Controller {
             return $states;
         }
         */
-        public function getTerminal()
+        public function getTerminal(\Request $request)
 	{
-            $id = \Input::get('id');
+            //$post = $request::all();
+            $id = $request::get('id');
+            dd($request);
+            $id = $id == 'null' ? false : $id;
             $states = Entity::log('payment',$id);
             //$states = $this->states('payment',$id);
             $incasss = Entity::log('incass',$id);
@@ -157,6 +167,113 @@ class HermesController extends Controller {
             ]);
 	}
         
+        public function getPayment(\Request $request){
+            $id = $request::get('id');
+            $sum = $request::get('sum');
+            $num = $request::get('num');
+            $data['id'] = $id == "" ? null : $id;
+            $data['sum'] = $sum == "" ? null : $sum;
+            $data['num'] = $num == "" ? null : $num;
+            $data['date'] = $request::get('date');
+            if(!isset($data['date'])){
+                $data['date']['start'] = date("Y-m-d 00:00:00");
+                $data['date']['end'] = date("Y-m-d 23:59:59");
+            }
+            //$data['date']['start'] = new \DateTime($data['date']['start']);
+            //$data['date']['end'] = new \DateTime($data['date']['end']);
+            //$data['date']['start'] = new Carbon(strtotime($data['date']['start']));
+            //$data['date']['end'] = new Carbon(strtotime($data['date']['end']));
+            $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
+            $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
+
+            $points = Point::all();
+            $point = [];
+            foreach($points as $poin){
+                $point[$poin->id] = $poin->name;
+            }
+            
+            $states = Entity::logg('payment',$data);
+            $state = [];
+            foreach($states as $sts){
+                $state[$sts->number]['method'] = $sts->method;
+                $state[$sts->number]['point'] = $sts->pointId;
+                $state[$sts->number]['created'] = $sts->created;
+                $state[$sts->number][$sts->param] = $sts->value;
+            }
+            return view('hermes::payment', [
+                'state'=>$state, 
+                'point'=>$point,
+                'data'=>$data,
+            ]);            
+        }
+        
+        public function getPoints()
+        {
+            return view('hermes::points', [
+                'states'=>$this->data(),
+                'points'=>Point::all(),
+            ]);
+        }
+        
+        public function getIncass(\Request $request)
+        {
+            $id = $request::get('id');
+            $data['id'] = $id == "" ? null : $id;
+            $data['date'] = $request::get('date');
+            $data['sum'] = null;
+            $data['num'] = null;
+            if(!isset($data['date'])){
+                $data['date']['start'] = date("Y-m-d 00:00:00");
+                $data['date']['end'] = date("Y-m-d 23:59:59");
+            }
+            //$data['date']['start'] = Carbon::instance(new \DateTime($data['date']['start']));
+            //$data['date']['end'] = Carbon::instance(new \DateTime($data['date']['end']));
+            //$data['date']['start'] = new Carbon(strtotime($data['date']['start']));
+            //$data['date']['end'] = new Carbon(strtotime($data['date']['end']));
+            $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
+            $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
+            
+            $states = Entity::logg('incass',$data);
+            $state = [];
+            foreach($states as $sts){
+                $state[$sts->number]['created'] = $sts->created;
+                if(!isset($state[$sts->number]['arr'])) $state[$sts->number]['arr'] = [];
+                $state[$sts->number]['point'] = $sts->pointId;
+                $state[$sts->number]['number'] = $sts->number;
+                switch($sts->param){
+                    case 'currentDate';
+                       $state[$sts->number]['date'] = $sts->value;
+                       break;
+                    case 'banknotes':
+                        $state[$sts->number]['banknotes'] = $sts->value;
+                        break;
+                    case 'sum':
+                        $state[$sts->number]['sum'] = $sts->value;
+                        break;
+                    case 'previousDate':
+                        break;
+                    case 'order': break;
+                    case 'date': break;
+                    case 'txn': break;
+                    default:
+                        $state[$sts->number]['arr'][$sts->param] = $sts->value;
+                }
+            }
+            
+            $points = Point::all();
+            $point = [];
+            foreach($points as $poin){
+                $point[$poin->id] = $poin->name;
+            }
+            
+            return view('hermes::incass', [
+                'incass'=>$state, 
+                'point'=>$point,
+                'data'=>$data,
+            ]);            
+            
+        }
+
         public function getLibTerm()
         {
             $point = Point::all();

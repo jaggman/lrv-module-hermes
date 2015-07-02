@@ -26,7 +26,7 @@
             <?php }  ?>
         </tbody>
     </table>
-<?= Form::model(new \App\Models\Point) ?>
+<?= Form::model(new Modules\Hermes\Models\Point) ?>
 <h3>Создать</h3>
 <?= Form::label('id', 'Идентификатор:').Form::text('id', \Input::old('id')); ?>
 <?php if ($errors->has('id')) {

@@ -7,16 +7,19 @@
  */
 use Modules\Hermes\Http\Controllers\HermesController;
 
+//@extends('hermes::layouts.layout')
 ?>
-@extends('hermes::layouts.layout')
+@extends('hermes::layouts.master')
 
 @section('title', 'Front')
 
 
 @section('content')
+<span style="color:red;">* <i>выведен только один терминал, т.к. данные приходили только по нему</i></span>
     <table id="terminals">
         <thead>
             <tr>
+                <th>№</th>
                 <th>Терминал</th>
                 <th>Статус</th>
                 <th>Банкнот</th>
@@ -26,8 +29,9 @@ use Modules\Hermes\Http\Controllers\HermesController;
         <tbody>
             <?php foreach($state as $k=>$sts){?>
             <tr data-id="{{ $k }}">
+                <td>{{ $k }}</td>
                 <td>
-                    <?= $k /*?> <br />
+                    <?= @$point[$k]['name'] /*?> <br />
                     <?= var_dump($sts) /*?> <br />
                     <?= /*Config::set('app.timezone', 'America/Chicago'); ?>
                     <?= date_format(new DateTime('now'),'Y-m-d H:i:s') ?> <br />

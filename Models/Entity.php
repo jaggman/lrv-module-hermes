@@ -55,6 +55,55 @@ class Entity extends Model {
             return $states;
         }
         
+	public static function logg($method, $data, $limit = null, $offset = 0)
+        {
+            $entity = new self();
+            $join = self::select('number')
+                ->distinct('number')
+                ->where('method', $method)
+                ->whereBetween('created', $data['date'])
+                //->where('created', '>=',$data['date']['start'])
+                //->where('created', '<=',$data['date']['end'])
+                ->orderBy('id', 'desc')
+                
+                ->skip($offset);
+            $binds = [
+                $method,
+                $data['date']['start'],
+                $data['date']['end'],
+            ];
+            if($limit !== null) $join->take($limit);
+            else $join->take(100);
+            if($data['id'] !== null){
+                $join->where('pointId', $data['id']);
+                $binds[] = $data['id'];
+            }
+            if($data['sum'] !== null){
+                $join->where('param', 'sum');
+                $join->where('value', $data['sum']);
+                $binds[] = 'sum';
+                $binds[] = $data['sum'];
+            }elseif($data['num'] !== null){
+                $join->where('param', 'order');
+                $join->where('value', $data['num']);
+                $binds[] = 'order';
+                $binds[] = $data['num'];
+            }
+            $states = $entity
+                ->join(
+                    new \Illuminate\Database\Query\Expression(
+                        '('.
+                            $join
+                            ->toSql()
+                        .') b'
+                    )
+                    , $entity->table.'.number', '=', 'b.number')
+                ->toSql()
+                ;
+            $states = \DB::connection($entity->connection)->select($states,$binds);
+            return $states;
+        }
+        
         public static function state(){
             //$table='Entity';
             $entity = new self();
