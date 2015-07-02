@@ -107,5 +107,8 @@
     .table tbody tr {
         background-color: #ececec;
     }
+    #incass {
+        width: inherit;
+    }
 </style>
 @stop

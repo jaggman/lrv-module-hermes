@@ -60,7 +60,9 @@ class HermesController extends Controller {
                 Entityt::insert($entity);
                 $variables['id'] = Entityt::lastId();
             }
-            return json_encode( $variables );
+            return response()->json($variables);
+            //return json_encode( $variables );
+            //echo json_encode( $variables );
         }
         
         private function data()

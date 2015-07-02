@@ -43,7 +43,8 @@
     <table id="entity" class="table table-hover">
         <thead>
             <tr>
-                <th>Трансакция</th>
+                <!--<th>Трансакция</th>-->
+                <th>TXN</th>
                 <th>Терминал</th>
                 <th>Время</th>
                 <th>(Время)</th>
@@ -62,14 +63,15 @@
             ]; ?>
             <?php foreach($state as $k=>$sts){?>
             <tr>
-                <td><?= @$k ?></td>
+                <!--<td><?= @$k ?></td>-->
+                <td><?= @$sts['txn'] ?></td>
                 <td><?= $sts['point'] ?> (<?= $point[$sts['point']] ?>)</td>
                 <td><?= $sts['created'] ?></td>
                 <td>(<?= $sts['date'] ?>)</td>
                 <td><?= $sts['sum'] ?></td><?php $agr['sum'] += $sts['sum']; ?>
                 <td>OK*</td>
                 <td>Global Travel*</td>
-                <td><?= @$sts['method'] ?></td>
+                <td><?= @$sts['type'] ?></td>
                 <td><?= @$sts['order'] ?></td>
                 <td>Комментарий*</td>
             </tr>
@@ -124,6 +126,9 @@
 <style type="text/css">
     .table tbody tr {
         background-color: #ececec;
+    }
+    #entity {
+          width: inherit;
     }
 </style>
 @stop
