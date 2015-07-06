@@ -102,7 +102,7 @@ class InController extends Controller {
                 
                 $json = json_decode($params,1);
                 $entity = [];
-                $number = uniqid();
+                $number = base_convert(uniqid(),16,10);
                 $variables['transaction'] = $number;
                 if($method == 'payment'){
                     $old = \Modules\Hermes\Models\Payment::select()->where(['txn'=>$json['txn']])->get();
