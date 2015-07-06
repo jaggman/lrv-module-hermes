@@ -24,13 +24,43 @@ class HermesServiceProvider extends ServiceProvider {
 	}
 
 	/**
+         *
+         * @var type string
+         * 
+         * namespace for console scripts
+         */
+        protected $namespace = 'Modules\\Hermes\\Console\\';
+        
+        /**
+         * 
+         * @return type array
+         * 
+         * list classnames of console scripts
+         */
+        protected function getCommands(){
+            $mask = realpath(__DIR__.'/../Console').'/*.php';
+            $dir = glob($mask);
+            $class = [];
+            foreach($dir as $file){
+                preg_match('/\/Console\/(.*)\.php/U', $file, $match);
+                $class[] = $match[1];
+            }
+            return $class;
+        }
+        
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
 	public function register()
 	{		
-		//
+            /**
+             * Register the commands.
+             */
+            foreach ($this->getCommands() as $command) {
+                $this->commands($this->namespace.$command);
+            }
 	}
 
 	/**
@@ -42,7 +72,6 @@ class HermesServiceProvider extends ServiceProvider {
 	{
 		$this->publishes([
 		    __DIR__.'/../Config/config.php' => config_path('hermes.php'),
-		    __DIR__.'/../Config/database.php' => config_path('hermes.php'),
 		]);
 		$this->mergeConfigFrom(
 		    __DIR__.'/../Config/config.php', 'hermes'

@@ -14,4 +14,24 @@ class Payment extends Model {
     protected $table = 'Payment';
     protected $connection = 'hermes';
     public $timestamps = false;
+    
+    /*
+     * @data (array)[
+     *   id (null),
+     *   sum (null),
+     *   num (null),
+     *   date (array)[
+     *      start (class Carbon)
+     *      end (class Carbon)
+     *   ]
+     * ]
+     */
+    public static function log($data){
+        $payment = self::select();
+        if($data['id']) $payment->where('pointId', $data['id']);
+        if($data['sum']) $payment->where('sum', $data['sum']);
+        if($data['num']) $payment->where('order', $data['num']);
+        $payment->whereBetween('created', $data['date']);
+        return $payment->get();
+    }
 }

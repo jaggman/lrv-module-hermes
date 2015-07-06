@@ -53,14 +53,14 @@
         <tbody>
             <?php foreach($incass as $k=>$inca){?>
             <tr>
-                <td><?= $k ?></td>
-                <!--<td><?= $point[$inca['point']] ?></td>-->
-                <td><?= $inca['point'] ?></td>
+                <td><?= $inca['number'] ?></td>
+                <!--<td><?= $point[$inca['pointId']] ?></td>-->
+                <td><?= $inca['pointId'] ?></td>
                 <td><?= @$inca['created'] ?></td>
-                <td>(<?= @$inca['date'] ?>)</td>
+                <td>(<?= @$inca['currentDate'] ?>)</td>
                 <td><?= @$inca['banknotes'] ?></td>
                 <td><?= @$inca['sum'] ?></td>
-                <td><?php while($a = each($inca['arr'])){ echo '['.$a['key'].'] => '.$a['value']."шт; \n"; } ?></td>
+                <td><?php $b = json_decode($inca['variables'], 1); while($a = each($b)){ echo '['.$a['key'].'] => '.$a['value']."шт; \n"; } ?></td>
             </tr>
             <?php } ?>
         </tbody>

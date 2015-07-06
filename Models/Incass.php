@@ -14,4 +14,13 @@ class Incass extends Model {
     protected $table = 'Incass';
     protected $connection = 'hermes';
     public $timestamps = false;
+
+    public static function log($data){
+        $payment = self::select();
+        if($data['id']) $payment->where('pointId', $data['id']);
+        //if($data['sum']) $payment->where('sum', $data['sum']);
+        //if($data['num']) $payment->where('order', $data['num']);
+        $payment->whereBetween('created', $data['date']);
+        return $payment->get();
+    }
 }

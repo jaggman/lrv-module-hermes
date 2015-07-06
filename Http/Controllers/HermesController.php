@@ -4,12 +4,17 @@ use Pingpong\Modules\Routing\Controller;
 use Modules\Hermes\Models\Point;
 use Modules\Hermes\Models\Entityt;
 use Modules\Hermes\Models\Entity;
+use Modules\Hermes\Models\Payment;
+use Modules\Hermes\Models\Incass;
+use Modules\Hermes\Models\Query;
 use Carbon\Carbon;
 
 class HermesController extends Controller {
 	
         public function postIn(\Request $request)
         {
+            Query::insert(['query'=>json_encode($request::all())]);
+            return;
             $post = $request::all();
             //dd($post);
             $method = null;
@@ -185,10 +190,6 @@ class HermesController extends Controller {
                 $data['date']['start'] = date("Y-m-d 00:00:00");
                 $data['date']['end'] = date("Y-m-d 23:59:59");
             }
-            //$data['date']['start'] = new \DateTime($data['date']['start']);
-            //$data['date']['end'] = new \DateTime($data['date']['end']);
-            //$data['date']['start'] = new Carbon(strtotime($data['date']['start']));
-            //$data['date']['end'] = new Carbon(strtotime($data['date']['end']));
             $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
             $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
 
@@ -198,7 +199,10 @@ class HermesController extends Controller {
                 $point[$poin->id] = $poin->name;
             }
             
-            $states = Entity::logg('payment',$data);
+            //$states = Entity::logg('payment',$data);
+            $states = Payment::log($data);
+            //dd($states);
+            /*
             $state = [];
             foreach($states as $sts){
                 $state[$sts->number]['method'] = $sts->method;
@@ -206,8 +210,10 @@ class HermesController extends Controller {
                 $state[$sts->number]['created'] = $sts->created;
                 $state[$sts->number][$sts->param] = $sts->value;
             }
+             */
             return view('hermes::payment', [
-                'state'=>$state, 
+                //'state'=>$state, 
+                'state'=>$states, 
                 'point'=>$point,
                 'data'=>$data,
             ]);            
@@ -226,8 +232,8 @@ class HermesController extends Controller {
             $id = $request::get('id');
             $data['id'] = $id == "" ? null : $id;
             $data['date'] = $request::get('date');
-            $data['sum'] = null;
-            $data['num'] = null;
+            //$data['sum'] = null;
+            //$data['num'] = null;
             if(!isset($data['date'])){
                 $data['date']['start'] = date("Y-m-d 00:00:00");
                 $data['date']['end'] = date("Y-m-d 23:59:59");
@@ -239,8 +245,9 @@ class HermesController extends Controller {
             $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
             $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
             
-            $states = Entity::logg('incass',$data);
-            $state = [];
+            //$states = Entity::logg('incass',$data);
+            $states = Incass::log($data);
+            /*$state = [];
             foreach($states as $sts){
                 $state[$sts->number]['created'] = $sts->created;
                 if(!isset($state[$sts->number]['arr'])) $state[$sts->number]['arr'] = [];
@@ -264,7 +271,7 @@ class HermesController extends Controller {
                     default:
                         $state[$sts->number]['arr'][$sts->param] = $sts->value;
                 }
-            }
+            }*/
             
             $points = Point::all();
             $point = [];
@@ -273,7 +280,8 @@ class HermesController extends Controller {
             }
             
             return view('hermes::incass', [
-                'incass'=>$state, 
+                //'incass'=>$state, 
+                'incass'=>$states, 
                 'point'=>$point,
                 'data'=>$data,
             ]);            
