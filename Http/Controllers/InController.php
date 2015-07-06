@@ -2,6 +2,8 @@
 
 use Pingpong\Modules\Routing\Controller;
 use Modules\Hermes\Models\Entity;
+use Modules\Hermes\Models\Query;
+use Modules\Hermes\Models\Number;
 use Carbon\Carbon;
 
 class InController extends Controller {
@@ -9,6 +11,10 @@ class InController extends Controller {
         public function postIn(\Request $request)
         {
             $post = $request::all();
+            Query::insert([
+				'method'=>$post['method'],
+				'query'=>json_encode($post),
+			]);
             //dd($post);
             $method = null;
             $params = null;
@@ -42,6 +48,7 @@ class InController extends Controller {
                 $json = json_decode($params,1);
                 $entity = [];
                 $number = uniqid();
+                $number = Number::get();
                 $variables['transaction'] = $number;
                 foreach ($json as $k=>$v) {
                     $entity[] = [

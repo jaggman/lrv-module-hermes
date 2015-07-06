@@ -14,4 +14,4 @@
 
 require __DIR__ . '/Http/routes.php';
 //require __DIR__ . '/Console/Kernel.php';
-Artisan::resolve('PaymentUpdate');
+//Artisan::resolve('PaymentUpdate');
