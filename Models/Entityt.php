@@ -27,6 +27,6 @@ class Entityt extends Model {
     public static function lastId(){
         return \DB::connection('hermes')->getPdo()->lastInsertId(null);
     }
-
+    
 
 }

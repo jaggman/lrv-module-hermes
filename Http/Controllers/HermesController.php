@@ -11,6 +11,7 @@ class HermesController extends Controller {
         public function postIn(\Request $request)
         {
             $post = $request::all();
+            //dd($post);
             $method = null;
             $params = null;
             $variables = $errors = array();
@@ -41,7 +42,7 @@ class HermesController extends Controller {
                 $variables['message'] = array("message"=>"method=".$method.", params=".$params);
                 
                 $json = json_decode($params,1);
-                
+                //dd($json);
                 $entity = [];
                 //$created = new \DateTime();
                 $number = uniqid();
@@ -50,15 +51,18 @@ class HermesController extends Controller {
                         'method'=>$method,
                         'userId'=>0,
                         //'created'=>$created,
+                        'created'=>Carbon::now('Europe/Moscow'),
                         'param'=>$k,
-                        'value'=>$v,
+                        'value'=>$method == 'test' ? 'test' : $v,
                         'number'=>$number,
                         'pointId'=>$pointId,
                     ];
                 }
                 $variables['transaction'] = $number;
-                Entityt::insert($entity);
-                $variables['id'] = Entityt::lastId();
+                //dd($entity);
+                $d = Entity::insert($entity);
+                //dd($d);
+                $variables['id'] = Entity::lastId();
             }
             return response()->json($variables);
             //return json_encode( $variables );

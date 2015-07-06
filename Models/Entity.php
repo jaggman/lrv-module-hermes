@@ -16,6 +16,10 @@ class Entity extends Model {
     //protected $fillable = array('id','name');
     public $timestamps = false;
   
+    public static function lastId(){
+        return \DB::connection('hermes')->getPdo()->lastInsertId(null);
+    }
+
     /*public function validate()
     {
         return \Validator::make($this->toArray(),[
