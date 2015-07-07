@@ -27,11 +27,23 @@ class Payment extends Model {
      * ]
      */
     public static function log($data){
-        $payment = self::select();
+        //$payment = self::select();
+        $payment = self::with('typename')->with('point');
         if($data['id']) $payment->where('pointId', $data['id']);
         if($data['sum']) $payment->where('sum', $data['sum']);
         if($data['num']) $payment->where('order', $data['num']);
         $payment->whereBetween('created', $data['date']);
         return $payment->get();
     }
+
+    public function typename()
+    {
+        return $this->belongsTo('Modules\Hermes\Models\Paytype', 'type');
+    }
+    
+    public function point()
+    {
+        return $this->belongsTo('Modules\Hermes\Models\Point', 'pointId');
+    }
+    
 }

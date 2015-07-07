@@ -65,13 +65,13 @@
             <tr>
                 <!--<td><?= @$k ?></td>-->
                 <td><?= @$sts->txn ?></td>
-                <td><?= @$sts->pointId ?> (<?= @$point[$sts->pointId] ?>)</td>
+                <td><?= @$sts->point ?></td>
                 <td><?= $sts->created ?></td>
                 <td>(<?= @$sts['date'] ?>)</td>
                 <td><?= $sts['sum'] ?></td><?php  if($sts->proc) $agr['sum'] += $sts['sum']; else $agr['obr'] += $sts['sum']; ?>
                 <td>{{ $sts->proc ? "OK" : "в обработке" }}</td>
                 <td>Global Travel*</td>
-                <td><?= @$sts['type'] ?></td>
+                <td><?= $sts->typename ?></td>
                 <td><?= @$sts['order'] ?></td>
                 <td>Комментарий*</td>
             </tr>

@@ -9,24 +9,14 @@ use Eloquent as Model;
  * and open the template in the editor.
  */
 
-class Point extends Model {
+class Paytype extends Model {
 
-    protected $table = 'Point';
+    protected $table = 'Paytype';
     protected $connection = 'hermes';
-    protected $fillable = array('id','name');
     public $timestamps = false;
-  
-    public function validate()
-    {
-        return \Validator::make($this->toArray(),[
-            'id' => ['required', 'unique:'.$this->connection.'.'.$this->table, 'numeric'],
-            'name' => ['required', 'min:7'],
-        ]);
-    }
     
     public function __toString()
     {
         return $this->name;
     }
-
 }

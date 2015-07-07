@@ -54,8 +54,8 @@
             <?php foreach($incass as $k=>$inca){?>
             <tr>
                 <td><?= $inca['number'] ?></td>
-                <!--<td><?= $point[$inca['pointId']] ?></td>-->
-                <td><?= $inca['pointId'] ?></td>
+                <!--<td><?= $inca->point ?></td>-->
+                <td><?= $inca->point ?></td>
                 <td><?= @$inca['created'] ?></td>
                 <td>(<?= @$inca['currentDate'] ?>)</td>
                 <td><?= @$inca['banknotes'] ?></td>

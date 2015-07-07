@@ -16,11 +16,24 @@ class Incass extends Model {
     public $timestamps = false;
 
     public static function log($data){
-        $payment = self::select();
+        $payment = self::with('point');
         if($data['id']) $payment->where('pointId', $data['id']);
         //if($data['sum']) $payment->where('sum', $data['sum']);
         //if($data['num']) $payment->where('order', $data['num']);
         $payment->whereBetween('created', $data['date']);
         return $payment->get();
     }
+
+    public function point()
+    {
+        return $this->belongsTo('Modules\Hermes\Models\Point', 'pointId');
+    }
+    
+    public function validate()
+    {
+        return \Validator::make($this->toArray(),[
+            'previousDate' => ['required', 'unique:'.$this->connection.'.'.$this->table, 'date_format:Y-m-d H:i:s'],
+        ]);
+    }
+    
 }
