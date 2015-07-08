@@ -36,7 +36,12 @@ class Incass extends Model {
     public function validate()
     {
         return \Validator::make($this->toArray(),[
-            'previousDate' => ['required', 'unique:'.$this->connection.'.'.$this->table, 'date_format:Y-m-d H:i:s'],
+            //'previousDate' => ['required', 'unique:'.$this->connection.'.'.$this->table, 'date_format:Y-m-d H:i:s'],
+			/*
+			 * Using this validator:
+			 * https://github.com/felixkiss/uniquewith-validator
+			 */
+            'previousDate' => ['required', 'unique_with:'.$this->connection.'.'.$this->table.',pointId,NULL', 'date_format:Y-m-d H:i:s'],
         ]);
     }
     
