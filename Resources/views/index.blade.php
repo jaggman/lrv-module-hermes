@@ -15,8 +15,8 @@ use Modules\Hermes\Http\Controllers\HermesController;
 
 
 @section('content')
-<span style="color:red;">* <i>выведен только один терминал, т.к. данные приходили только по нему</i></span>
-    <table id="terminals">
+<h2>Статусы терминалов</h2>
+    <table class="table" id="terminals">
         <thead>
             <tr>
                 <th>№</th>
@@ -27,38 +27,33 @@ use Modules\Hermes\Http\Controllers\HermesController;
             </tr>
         </thead>
         <tbody>
-            <?php foreach($state as $k=>$sts){?>
-            <tr data-id="{{ $k }}">
-                <td>{{ $k }}</td>
+            <?php foreach($point as $poin){?>
+            <tr data-id="{{ $poin->id }}">
+                <td>{{ $poin->id }}</td>
                 <td>
-                    <?= @$point[$k]['name'] /*?> <br />
-                    <?= var_dump($sts) /*?> <br />
-                    <?= /*Config::set('app.timezone', 'America/Chicago'); ?>
-                    <?= date_format(new DateTime('now'),'Y-m-d H:i:s') ?> <br />
-                    <?= config('app.timezone'); ?> <br />
-                    <?= date_default_timezone_get() */ ?> <br />
+                    <?= $poin->name ?> <br />
                 </td>
-                <td><i class="fa fa-circle" style="color:<?= ($sts['state'] == 200 && $sts['diff'] < 300) ? 'green' : 'orange' ?>;"></i> <?= $sts['state'] ?></td>
-                <td><?= $sts['banknotes'] ?></td>
-                <td><?= $sts['created'] ?></td>
+                <td><i class="fa fa-circle" style="color:<?= ($poin->state['state'] == 200 && $poin->state['diff'] < 300) ? 'green' : 'orange' ?>;"></i> <?= $poin->state['state'] ?></td>
+                <td><?= $poin->state['banknotes'] ?></td>
+                <td><?= $poin->state['created'] ?></td>
             </tr>
             <?php }  ?>
         </tbody>
     </table>
 <style type="text/css">
     #terminals tbody tr:hover {
-        cursor: pointer;
+        //cursor: pointer;
         background: #eee;
     }
     #terminals {
-        border: none;
-        border-spacing: 0px;
+        width: inherit;
     }
 
 </style>
 @stop
 @section('script')
-    $('#terminals tbody').on('click', 'tr', function(){
+<script type="text/javascript">
+    $('#terminals tbody').on('click', 'trt', function(){
         //alert($(this).attr('data-href'));
         document.location = '{{ action('\Modules\Hermes\Http\Controllers\HermesController@getTerminal').'?id=' }}' + $(this).attr('data-id');
     })
@@ -73,4 +68,5 @@ use Modules\Hermes\Http\Controllers\HermesController;
             }
         );
     },60000);
+</script>
 @stop

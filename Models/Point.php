@@ -29,4 +29,10 @@ class Point extends Model {
         return $this->name;
     }
 
+    public function state()
+    {
+        return $this->hasOne('Modules\Hermes\Models\State', 'pointId')->select(['*', \DB::connection($this->connection)->raw("TIME_TO_SEC(TIMEDIFF(NOW(),`created`)) diff")])->latest('id');
+        return $this->hasOne('Modules\Hermes\Models\wState', 'pointId')->select(['*', \DB::connection($this->connection)->raw("TIME_TO_SEC(TIMEDIFF(NOW(),`created`)) diff")])->groupBy('pointId');
+        //return $this->hasOne(\DB::connection($this->connection)->raw(State::latest('id')->toSql()), 'pointId')->select(['*', \DB::connection($this->connection)->raw("TIME_TO_SEC(TIMEDIFF(NOW(),`created`)) diff")])->groupBy('pointId');
+    }
 }

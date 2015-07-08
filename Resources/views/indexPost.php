@@ -1,9 +1,11 @@
-<?php foreach($state as $k=>$sts){?>
-<tr>
-    <td><?= $k ?></td>
-    <td><?= @$point[$k]['name'] ?></td>
-    <td><i class="fa fa-circle" style="color:<?= ($sts['state'] == 200 && $sts['diff'] < 300) ? 'green' : 'orange' ?>;"></i> <?= $sts['state'] ?></td>
-    <td><?= $sts['banknotes'] ?></td>
-    <td><?= $sts['created'] ?></td>
-</tr>
-<?php } ?>
+            <?php foreach($point as $poin){?>
+            <tr data-id="<?= $poin->id ?>">
+                <td><?= $poin->id ?></td>
+                <td>
+                    <?= $poin->name ?> <br />
+                </td>
+                <td><i class="fa fa-circle" style="color:<?= ($poin->state['state'] == 200 && $poin->state['diff'] < 300) ? 'green' : 'orange' ?>;"></i> <?= $poin->state['state'] ?></td>
+                <td><?= $poin->state['banknotes'] ?></td>
+                <td><?= $poin->state['created'] ?></td>
+            </tr>
+            <?php }  ?>

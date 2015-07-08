@@ -93,15 +93,13 @@ class HermesController extends Controller {
         public function getIndex()
 	{
             return view('hermes::index', [
-                'state'=>$this->data(),
-                'point'=>Point::all(),
+                'point'=>Point::with('state')->get(),
             ]);
 	}
         public function postIndex()
         {
             return view('hermes::indexPost', [
-                'state'=>$this->data(),
-                'point'=>Point::all(),
+                'point'=>Point::with('state')->get(),
             ]);
         }
         
@@ -150,24 +148,10 @@ class HermesController extends Controller {
             $data['num'] = $num == "" ? null : $num;
             $data['date'] = $request::get('date');
             if(!isset($data['date'])){
-                $data['date']['start'] = date("Y-m-d 00:00:00");
-                $data['date']['end'] = date("Y-m-d 23:59:59");
+                $data['date']['start'] = date("Y-m-d");
+                $data['date']['end'] = date("Y-m-d");
             }
-            $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
-            $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
-
-            //$states = Entity::logg('payment',$data);
             $states = Payment::log($data);
-            //dd($states);
-            /*
-            $state = [];
-            foreach($states as $sts){
-                $state[$sts->number]['method'] = $sts->method;
-                $state[$sts->number]['point'] = $sts->pointId;
-                $state[$sts->number]['created'] = $sts->created;
-                $state[$sts->number][$sts->param] = $sts->value;
-            }
-             */
             return view('hermes::payment', [
                 //'state'=>$state, 
                 'state'=>$states, 
@@ -179,7 +163,7 @@ class HermesController extends Controller {
         {
             return view('hermes::points', [
                 'states'=>$this->data(),
-                'points'=>Point::all(),
+                'points'=>Point::with('state')->get(),
             ]);
         }
         
@@ -188,29 +172,11 @@ class HermesController extends Controller {
             $id = $request::get('id');
             $data['id'] = $id == "" ? null : $id;
             $data['date'] = $request::get('date');
-            //$data['sum'] = null;
-            //$data['num'] = null;
             if(!isset($data['date'])){
-                $data['date']['start'] = date("Y-m-d 00:00:00");
-                $data['date']['end'] = date("Y-m-d 23:59:59");
+                $data['date']['start'] = date("Y-m-d");
+                $data['date']['end'] = date("Y-m-d");
             }
-            //$data['date']['start'] = Carbon::instance(new \DateTime($data['date']['start']));
-            //$data['date']['end'] = Carbon::instance(new \DateTime($data['date']['end']));
-            //$data['date']['start'] = new Carbon(strtotime($data['date']['start']));
-            //$data['date']['end'] = new Carbon(strtotime($data['date']['end']));
-            $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start']);
-            $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end']);
-            
-            //$states = Entity::logg('incass',$data);
             $states = Incass::log($data);
-            /*
-            $points = Point::all();
-            $point = [];
-            foreach($points as $poin){
-                $point[$poin->id] = $poin->name;
-            }
-             */
-            
             return view('hermes::incass', [
                 'incass'=>$states, 
                 //'point'=>$point,

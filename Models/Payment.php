@@ -3,6 +3,7 @@
 namespace Modules\Hermes\Models;
 
 use Eloquent as Model;
+use Carbon\Carbon;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,6 +28,8 @@ class Payment extends Model {
      * ]
      */
     public static function log($data){
+        $data['date']['start'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['start'].' 00:00:00');
+        $data['date']['end'] = Carbon::createFromFormat('Y-m-d H:i:s',$data['date']['end'].' 23:59:59');
         //$payment = self::select();
         $payment = self::with('typename')->with('point');
         if($data['id']) $payment->where('pointId', $data['id']);
