@@ -162,7 +162,7 @@ class HermesController extends Controller {
         public function getPoints()
         {
             return view('hermes::points', [
-                'states'=>$this->data(),
+                //'states'=>$this->data(),
                 'points'=>Point::with('state')->get(),
             ]);
         }
