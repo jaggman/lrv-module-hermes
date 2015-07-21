@@ -9,15 +9,15 @@
 ?>
 @extends('hermes::layouts.master')
 
-@section('title', 'Front')
+@section('title', 'Терминалы')
 
 @section('sidebar')
     @parent
 @stop
 
 @section('content')
-<span style="color:red;">* <i>Не отображается в state репортах</i></span>
-<table>
+<h2>Терминалы</h2>
+<table class="table paytable" id="points">
     <thead>
         <tr>
             <th>№ точки</th>
@@ -31,10 +31,26 @@
         <tr>
             <td>{{ $point['id'] }}</td>
             <td>{{ $point['name'] }}</td>
-            <td> -* </td>
-            <td>{{ @$states[$point['id']]['banknotes'] }}</td>
+            <td><?php $sum = 0;
+            if(isset($point->state)){
+                $var = json_decode($point->state['variables'],1);
+                foreach($var as $k=>$v) 
+                    $sum += $k*$v;
+            }
+            echo $sum;
+            ?></td>
+            <td>{{ isset($point->state) ? $point->state['banknotes'] : '-' }}</td>
         </tr>
         @endforeach
     </tbody>
 </table>
 @stop
+
+@section('script')
+<style type="text/css">
+    #points {
+        width: inherit;
+    }
+</style>
+@stop
+
