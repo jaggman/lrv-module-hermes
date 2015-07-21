@@ -48,6 +48,9 @@
 
 @section('script')
 <style type="text/css">
+    .table tbody tr:hover {
+        background-color: #ececec;
+    }
     #points {
         width: inherit;
     }

@@ -41,6 +41,10 @@ use Modules\Hermes\Http\Controllers\HermesController;
         </tbody>
     </table>
 <style type="text/css">
+    #terminals tbody tr:hover {
+        //cursor: pointer;
+        background: #eee;
+    }
     #terminals {
         width: inherit;
     }
